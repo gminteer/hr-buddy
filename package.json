@@ -1,0 +1,56 @@
+{
+  "name": "insert-name-here",
+  "version": "1.0.0",
+  "description": "",
+  "engines": {
+    "node": ">=12.18.3"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "html"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node/modules"
+    ],
+    "testEnvironment": "node"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "db/**",
+      "**/__tests__/*",
+      "**/__mocks__/*",
+      "public/**"
+    ]
+  },
+  "repository": "github:gminteer/insert-name-here",
+  "author": "Greg Minteer <gminteer@gmail.com> (https://gminteer.github.io)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/gminteer/insert-name-here/issues"
+  },
+  "homepage": "https://github.com/gminteer/insert-name-here#readme",
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-compat": "^3.8.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^23.20.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-security": "^1.4.0",
+    "jest": "^26.4.0",
+    "prettier": "^2.0.5"
+  },
+  "dependencies": {
+    "faker": "^4.1.0",
+    "inquirer": "^7.3.3",
+    "mysql2": "^2.1.0"
+  }
+}

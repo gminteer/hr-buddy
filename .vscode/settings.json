@@ -1,0 +1,17 @@
+{
+  "sqltools.connections": [
+    {
+      "database": "hr_buddy",
+      "driver": "MySQL",
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "name": "hr_buddy",
+      "password": "Si%n8lu2sahPe1ke",
+      "port": 3306,
+      "previewLimit": 50,
+      "server": "localhost",
+      "username": "dba"
+    }
+  ]
+}
