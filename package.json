@@ -49,8 +49,10 @@
     "prettier": "^2.0.5"
   },
   "dependencies": {
+    "console.table": "^0.10.0",
     "faker": "^4.1.0",
     "inquirer": "^7.3.3",
-    "mysql2": "^2.1.0"
+    "mysql2": "^2.1.0",
+    "sql-template-strings": "^2.2.2"
   }
 }
