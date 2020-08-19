@@ -5,7 +5,7 @@ const CONNECTION_SETTINGS = require('./connection.json');
 
 const dbWrapper = {
   connection: mysql.createConnection({supportBigNumbers: true, ...CONNECTION_SETTINGS}),
-  getSql: {
+  GET_SQL: Object.freeze({
     department: () => sql`SELECT * FROM department`,
     role: () => sql`SELECT role.id AS id,
         title,
@@ -25,11 +25,19 @@ const dbWrapper = {
         LEFT JOIN role ON role_id = role.id
         LEFT JOIN department ON department_id = department.id
         LEFT JOIN employee mgr ON emp.manager_id = mgr.id`,
-  },
-  getOneSql: {
+  }),
+  GET_ONE_SQL: Object.freeze({
     department: (id) => sql` WHERE id = ${id}`,
     role: (id) => sql` WHERE role.id = ${id}`,
     employee: (id) => sql` WHERE emp.id = ${id}`,
+  }),
+  async _query(query) {
+    try {
+      const [rows] = await this.connection.query(query);
+      return rows;
+    } catch (err) {
+      return console.error(err);
+    }
   },
   async init() {
     try {
@@ -39,18 +47,20 @@ const dbWrapper = {
     }
   },
   async end() {
+    // This doesn't need to be async, but then it'd be the only function on dbWrapper that isn't async, so I think it's simpler this way...
     return this.connection.end();
   },
   async get(type, id) {
-    if (!Object.keys(this.getSql).includes(type)) return;
-    const query = this.getSql[type]();
-    if (id) query.append(this.getOneSql[type](id));
-    try {
-      const [rows] = await this.connection.query(query);
-      return rows;
-    } catch (err) {
-      console.error(err.message);
-    }
+    if (!Object.keys(this.GET_SQL).includes(type)) return;
+    if (id) return this.filter(type, this.GET_ONE_SQL[type](id));
+    const query = this.GET_SQL[type]();
+    return this._query(query);
+  },
+  async filter(type, filter) {
+    if (!Object.keys(this.GET_SQL).includes(type)) return;
+    if (!(filter instanceof sql.SQLStatement)) return;
+    const query = this.GET_SQL[type]().append(filter);
+    return await this._query(query);
   },
 };
 

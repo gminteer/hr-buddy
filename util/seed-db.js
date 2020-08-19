@@ -1,12 +1,7 @@
 /* eslint-disable camelcase */
 const {fake} = require('faker');
 const sql = require('sql-template-strings');
-const titleCase = (str) =>
-  str
-    .toLowerCase()
-    .split(' ')
-    .map((word) => word.replace(word[0], word[0].toUpperCase()))
-    .join(' ');
+const titleCase = require('../lib/title-case');
 
 const RANDOM_DEPARTMENT_NOUNS = [
   'Group',
