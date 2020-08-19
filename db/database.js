@@ -10,7 +10,7 @@ const dbWrapper = {
     role: () => sql`SELECT role.id AS id,
         title,
         salary,
-        department.name AS department_name
+        department.name AS department
       FROM role
         LEFT JOIN department ON department_id = department.id`,
     employee: () => sql`SELECT emp.id AS id,
@@ -18,8 +18,7 @@ const dbWrapper = {
         emp.last_name,
         role.title AS title,
         role.salary AS salary,
-        mgr.first_name AS manager_first_name,
-        mgr.last_name AS manager_last_name,
+        CONCAT (mgr.first_name, ' ', mgr.last_name) AS manager,
         department.name AS department
       FROM employee emp
         LEFT JOIN role ON role_id = role.id
@@ -60,7 +59,18 @@ const dbWrapper = {
     if (!Object.keys(this.GET_SQL).includes(type)) return;
     if (!(filter instanceof sql.SQLStatement)) return;
     const query = this.GET_SQL[type]().append(filter);
-    return await this._query(query);
+    return this._query(query);
+  },
+  async getDeptIdFromRoleId(id) {
+    if (!id) return;
+    const query = sql`SELECT department_id FROM role WHERE id = ${id}`;
+    const [row] = await this._query(query);
+    return row.department_id;
+  },
+  async getEmployeesByDeptId(id) {
+    if (!id) return;
+    const filter = sql` WHERE department_id = ${id}`;
+    return this.filter('employee', filter);
   },
 };
 
