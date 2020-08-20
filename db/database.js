@@ -26,13 +26,18 @@ const SELECT = Object.freeze({
 const WHERE = Object.freeze({
   department: {
     id: (id) => sql` WHERE id = ${id}`,
+    name: (name) => sql` WHERE name LIKE CONCAT('%',${name},'%')`,
   },
   role: {
     id: (id) => sql` WHERE role.id = ${id}`,
+    title: (title) => sql` WHERE title LIKE CONCAT('%',${title},'%')`,
+    fuzzy: (text) => sql` WHERE title LIKE CONCAT('%',${text},'%') OR department.name LIKE CONCAT('%',${text},'%')`,
   },
   employee: {
     id: (id) => sql` WHERE emp.id = ${id}`,
     departmentId: (departmentId) => sql` WHERE emp.department_id = ${departmentId}`,
+    name: (name) =>
+      sql` WHERE emp.first_name LIKE CONCAT('%',${name},'%') OR emp.last_name LIKE CONCAT('%',${name},'%')`,
   },
 });
 
@@ -76,8 +81,8 @@ const dbWrapper = {
   get(type, column, value) {
     if (!Object.keys(SELECT).includes(type)) return;
     const query = SELECT[type]();
-    if (column) {
-      if (!Object.keys(WHERE).includes(column)) return;
+    if (column && value !== undefined) {
+      if (!Object.keys(WHERE[type]).includes(column)) return;
       query.append(WHERE[type][column](value));
     }
     return this._query(query);
