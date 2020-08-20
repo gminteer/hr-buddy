@@ -35,7 +35,9 @@ const WHERE = Object.freeze({
   },
   employee: {
     id: (id) => sql` WHERE emp.id = ${id}`,
-    departmentId: (departmentId) => sql` WHERE emp.department_id = ${departmentId}`,
+    departmentId: (departmentId) => sql` WHERE role.department_id = ${departmentId}`,
+    isManager: () => ' WHERE emp.id in (SELECT manager_id FROM employee)',
+    managerId: (managerId) => sql` WHERE emp.manager_id = ${managerId}`,
     name: (name) =>
       sql` WHERE emp.first_name LIKE CONCAT('%',${name},'%') OR emp.last_name LIKE CONCAT('%',${name},'%')`,
   },
@@ -70,7 +72,8 @@ const INSERT = Object.freeze({
 
 const UPDATE = Object.freeze({
   employee: {
-    role: (employeeId, roleId) => sql`UPDATE employee SET role_id = ${roleId} WHERE id = ${employeeId}`,
+    roleId: (employeeId, roleId) => sql`UPDATE employee SET role_id = ${roleId} WHERE id = ${employeeId}`,
+    managerId: (employeeId, managerId) => sql`UPDATE employee SET manager_id = ${managerId} WHERE id = ${employeeId}`,
   },
 });
 const dbWrapper = {
