@@ -89,9 +89,9 @@ const dbWrapper = {
     return this._query(query);
   },
   // update
-  change(type, property, value) {
+  change(type, property, selector, value) {
     if (!type || !property) return;
-    const query = UPDATE[type][property](value);
+    const query = UPDATE[type][property](selector, value);
     return this._query(query);
   },
 };
