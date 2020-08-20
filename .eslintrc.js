@@ -24,6 +24,7 @@ module.exports = {
     'no-debugger': ['warn'],
     'vars-on-top': ['warn'],
     'brace-style': ['error', '1tbs', {allowSingleLine: true}],
+    'security/detect-object-injection': ['off'],
     eqeqeq: ['error', 'always'],
     curly: ['error', 'multi-or-nest', 'consistent'],
   },
