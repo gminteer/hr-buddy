@@ -40,7 +40,25 @@ const WHERE = Object.freeze({
       sql` WHERE emp.first_name LIKE CONCAT('%',${name},'%') OR emp.last_name LIKE CONCAT('%',${name},'%')`,
   },
 });
-
+const ORDER = Object.freeze({
+  department: {
+    name: (desc = false) => ` ORDER BY name ${desc ? 'DESC' : ''}`,
+    id: (desc = false) => ` ORDER BY id ${desc ? 'DESC' : ''}`,
+  },
+  role: {
+    deptFirst: (desc = false) => ` ORDER BY department.name ${desc ? 'DESC' : ''}, title ${desc ? 'DESC' : ''}`,
+    title: (desc = false) => ` ORDER BY title ${desc ? 'DESC' : ''}`,
+  },
+  employee: {
+    lastName: (desc = false) => ` ORDER BY emp.last_name ${desc ? 'DESC' : ''}, emp.first_name ${desc ? 'DESC' : ''}`,
+    firstName: (desc = false) => ` ORDER BY emp.first_name ${desc ? 'DESC' : ''}, emp.last_name ${desc ? 'DESC' : ''}`,
+    deptFirst: (desc = false) =>
+      ` ORDER BY department.name ${desc ? 'DESC' : ''},
+          role.title ${desc ? 'DESC' : ''},
+          emp.last_name ${desc ? 'DESC' : ''},
+          emp.first_name ${desc ? 'DESC' : ''}`,
+  },
+});
 const INSERT = Object.freeze({
   department: ({name}) => sql`INSERT INTO department (name) VALUES (${name})`,
   role: ({title, salary, departmentId}) =>
@@ -57,6 +75,7 @@ const UPDATE = Object.freeze({
 });
 const dbWrapper = {
   connection: mysql.createConnection({supportBigNumbers: true, ...CONNECTION_SETTINGS}),
+  sort: {department: 'name', role: 'deptFirst', employee: 'deptFirst'},
   // error "handling"
   async _query(query) {
     try {
@@ -85,6 +104,7 @@ const dbWrapper = {
       if (!Object.keys(WHERE[type]).includes(column)) return;
       query.append(WHERE[type][column](value));
     }
+    query.append(ORDER[type][this.sort[type]]());
     return this._query(query);
   },
   // create
