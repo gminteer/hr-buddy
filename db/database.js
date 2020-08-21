@@ -61,6 +61,7 @@ const ORDER = Object.freeze({
           emp.first_name ${desc ? 'DESC' : ''}`,
   },
 });
+
 const INSERT = Object.freeze({
   department: ({name}) => sql`INSERT INTO department (name) VALUES (${name})`,
   role: ({title, salary, departmentId}) =>
@@ -76,6 +77,13 @@ const UPDATE = Object.freeze({
     managerId: (employeeId, managerId) => sql`UPDATE employee SET manager_id = ${managerId} WHERE id = ${employeeId}`,
   },
 });
+
+const DELETE = Object.freeze({
+  department: {id: (id) => sql`DELETE FROM department WHERE id = ${id}`},
+  role: {id: (id) => sql`DELETE FROM role WHERE id = ${id}`},
+  employee: {id: (id) => sql`DELETE FROM employee WHERE id = ${id}`},
+});
+
 const dbWrapper = {
   connection: mysql.createConnection({supportBigNumbers: true, ...CONNECTION_SETTINGS}),
   sort: {department: 'name', role: 'deptFirst', employee: 'deptFirst'},
@@ -100,12 +108,12 @@ const dbWrapper = {
     return this.connection.end();
   },
   // read
-  get(type, column, value) {
+  get(type, column, selector) {
     if (!Object.keys(SELECT).includes(type)) return;
     const query = SELECT[type]();
-    if (column && value !== undefined) {
+    if (column && selector !== undefined) {
       if (!Object.keys(WHERE[type]).includes(column)) return;
-      query.append(WHERE[type][column](value));
+      query.append(WHERE[type][column](selector));
     }
     query.append(ORDER[type][this.sort[type]]());
     return this._query(query);
@@ -118,8 +126,17 @@ const dbWrapper = {
   },
   // update
   change(type, property, selector, value) {
+    if (!Object.keys(UPDATE).includes(type)) return;
+    if (!Object.keys(UPDATE[type]).includes[property]) return;
     if (!type || !property) return;
     const query = UPDATE[type][property](selector, value);
+    return this._query(query);
+  },
+  // delete
+  remove(type, column, selector) {
+    if (!Object.keys(DELETE).includes(type)) return;
+    if (!Object.keys(DELETE[type]).includes(column)) return;
+    const query = DELETE[type][column](selector);
     return this._query(query);
   },
 };

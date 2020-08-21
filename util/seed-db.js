@@ -16,10 +16,11 @@ const RANDOM_DEPARTMENT_NOUNS = [
 ];
 const RANDOM_DEPARTMENT_COUNT = 4;
 const MIN_ROLES = 4;
-const RANDOM_ROLES = 4;
-const SALARY_RANGE = 125000.0;
-const MIN_EMPLOYEES = 12;
-const RANDOM_EMPLOYEES = 8;
+const RANDOM_ROLES = 2;
+const SALARY_RANGE = 75000.0;
+const MIN_EMPLOYEES = 8;
+const RANDOM_EMPLOYEES = 4;
+
 const roles = {};
 
 function randomGroupName() {

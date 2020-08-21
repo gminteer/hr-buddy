@@ -19,6 +19,7 @@ module.exports = {
     'prettier/prettier': ['warn'],
     'no-template-curly-in-string': ['error'],
     'prefer-template': ['warn'],
+    camelcase: ['warn'],
     'require-jsdoc': ['off'],
     'new-cap': ['warn', {capIsNewExceptions: ['Router']}],
     'no-debugger': ['warn'],
@@ -30,7 +31,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['__tests__/**/*', '__mocks__/**/*', 'test/**/*'],
+      files: ['**/__tests__/**/*', '**/__mocks__/**/*', 'test/**/*', 'util/**/*'],
       env: {
         'jest/globals': true,
       },
@@ -38,6 +39,7 @@ module.exports = {
       extends: baseExtends.concat(['plugin:node/recommended', 'plugin:jest/recommended', 'plugin:jest/style']),
       rules: {
         'node/no-unpublished-require': ['error', {allowModules: devDependencies}],
+        'require-jsdoc': ['off'],
       },
     },
     {
