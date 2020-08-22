@@ -7,7 +7,7 @@ const SELECT = Object.freeze({
   role: () => sql`SELECT role.id AS id,
       department.name AS department,
       title,
-      salary3
+      salary
     FROM role
       LEFT JOIN department ON department_id = department.id`,
   employee: () => sql`SELECT emp.id AS id,
@@ -151,7 +151,7 @@ const dbWrapper = {
   // update
   change(type, property, selector, value) {
     if (!Object.keys(UPDATE).includes(type)) return;
-    if (!Object.keys(UPDATE[type]).includes[property]) return;
+    if (!Object.keys(UPDATE[type]).includes(property)) return;
     if (!type || !property) return;
     const query = UPDATE[type][property](selector, value);
     return this._query(query);
