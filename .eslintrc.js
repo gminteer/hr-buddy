@@ -19,13 +19,15 @@ module.exports = {
     'prettier/prettier': ['warn'],
     'no-template-curly-in-string': ['error'],
     'prefer-template': ['warn'],
-    camelcase: ['warn'],
+    camelcase: ['warn'], // ironic that the eslint rule for camelCase isn't camelCased...
     'require-jsdoc': ['off'],
     'new-cap': ['warn', {capIsNewExceptions: ['Router']}],
     'no-debugger': ['warn'],
     'vars-on-top': ['warn'],
     'brace-style': ['error', '1tbs', {allowSingleLine: true}],
-    'security/detect-object-injection': ['off'],
+    'security/detect-object-injection': ['off'], // This rule in general is a good idea but I'm reasonably confident that I'm a big boy who knows what he's doing...
+    // especially since it literally triggers on using square brackets with a variable to dynamically access an object's properties.
+    // if you can, like, pwn code I'm ignoring eslint/security on let me know and I will publicly eat crow on whatever social media network you choose...
     eqeqeq: ['error', 'always'],
     curly: ['error', 'multi-or-nest', 'consistent'],
   },
