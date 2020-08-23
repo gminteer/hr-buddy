@@ -27,12 +27,12 @@ function randomGroupName() {
   const deptNoun = RANDOM_DEPARTMENT_NOUNS[Math.floor(Math.random() * RANDOM_DEPARTMENT_NOUNS.length)];
   return titleCase(fake(`{{company.catchPhraseNoun}} ${deptNoun}`));
 }
-async function seed(db) {
+async function seed({connection}) {
   console.log('---\nDepartments\n---\n');
   const createDept = (name) => sql`INSERT INTO department (name) VALUES (${name})`;
   for (let i = 0; i < RANDOM_DEPARTMENT_COUNT; i++) {
     const name = randomGroupName();
-    const [rows] = await db.connection.execute(createDept(name));
+    const [rows] = await connection.execute(createDept(name));
     console.log(`${name} (id: ${rows.insertId})`);
   }
   console.log('\n---\nRoles\n---\n');
@@ -45,7 +45,7 @@ async function seed(db) {
     for (let i = 0; i < roleCount; i++) {
       const title = fake('{{name.jobArea}} {{name.jobType}}');
       const salary = Number((15080.0 + Math.random() * SALARY_RANGE).toFixed(2));
-      const [rows] = await db.connection.execute(createRole(title, salary, department_id));
+      const [rows] = await connection.execute(createRole(title, salary, department_id));
       console.log(`${title} (id ${rows.insertId})`);
       roles[department_id].push(rows.insertId);
     }
@@ -61,22 +61,22 @@ async function seed(db) {
       const first_name = fake('{{name.firstName}}');
       const last_name = fake('{{name.lastName}}');
       const role_id = roles[department_id][Math.floor(Math.random() * roles[department_id].length)];
-      const [rows] = await db.connection.execute(createEmployee(first_name, last_name, role_id));
+      const [rows] = await connection.execute(createEmployee(first_name, last_name, role_id));
       console.log(`${last_name}, ${first_name} (id: ${rows.insertId}) -- role: ${role_id}`);
       if (i < employeeCount / 6) {
         potentialManagers.push(rows.insertId);
       } else if (Math.random() < 0.75) {
         const manager_id = potentialManagers[Math.floor(Math.random() * potentialManagers.length)];
-        await db.connection.execute(addManager(rows.insertId, manager_id));
+        await connection.execute(addManager(rows.insertId, manager_id));
         console.log(`${last_name}, ${first_name}: manager set to id ${manager_id}`);
       }
     }
   }
 }
 
-const db = require('../db/database');
+const dbWrapper = require('../lib/db-wrapper');
 (async () => {
-  await db.init();
-  await seed(db);
-  await db.end();
+  await dbWrapper.init();
+  await seed(dbWrapper);
+  await dbWrapper.end();
 })();
