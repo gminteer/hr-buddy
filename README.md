@@ -4,7 +4,7 @@
 
 ## Description
 
-Featuring a simple, easy to use menu based interface, HR Buddy lets you keep track of your employees and manage your salary budget from the command line.
+Featuring a simple, easy to use menu based interface, HR Buddy lets you keep track of your employees and manage your salary budget from the command line. Watch a video walkthrough of HR Buddy in action [here](https://youtu.be/jWKBKLrWWz0)!
 
 ## Installation & Usage
 
